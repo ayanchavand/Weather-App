@@ -1,3 +1,4 @@
+//required packages
 package com.example.weather
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,28 +22,34 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //Declaration for referencing to UI elements
         val cityText: TextView = findViewById(R.id.city_text)
         val temp: TextView = findViewById((R.id.temp))
         val city: EditText = findViewById(R.id.city)
         val find: Button = findViewById(R.id.submit)
         val tempToggle: Switch = findViewById(R.id.temp_toggle)
 
+        //onClick function
         find.setOnClickListener{
-            val textView: TextView = findViewById(R.id.city_text)
+
+            //Variable Declarations for the API request
             val client = OkHttpClient()
             val apiKey = "31564b45765641eea0b174320231912"
             var city = city.text
             val url = "https://api.weatherapi.com/v1/current.json?key=$apiKey&q=$city"
             val request = Request.Builder().url(url).build()
+
+            //If the request is not received
             client.newCall(request).enqueue(object :Callback{
                 override fun onFailure(call: Call, e: IOException) {
                     e.printStackTrace()
                 }
-
+                //On successful request
                 override fun onResponse(call: Call, response: Response) {
                     if(response.isSuccessful){
                         val jsonResponse = response.body!!.string()
                         runOnUiThread {
+                            //parser for the JSON file
                             handleJsonResponse(jsonResponse, cityText, temp, tempToggle)
                         }
 
